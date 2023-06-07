@@ -20,7 +20,7 @@ async function onLoad(evt){
     evt.preventDefault();
     page += 1;
     console.log('page', page);
-    
+    newPixabayAPI.page += 1;
     
     try {
     const dataRenderI = await newPixabayAPI.fetchImg();
@@ -42,8 +42,11 @@ async function onLoad(evt){
 
 async function onSubmit(evt) {
     evt.preventDefault();
+    page = 0;
+    newPixabayAPI.page = 0;
     searchEl = refs.inputSearch.value.trim();
     newPixabayAPI.query = searchEl;
+    newPixabayAPI.page += 1;
 
     if (!searchEl || searchEl === ' ') {
       return Notiflix.Notify.failure (`Please, enter your search query.`);
@@ -52,12 +55,14 @@ async function onSubmit(evt) {
     try {
       const dataI = await newPixabayAPI.fetchImg();
       const dataImg = dataI.data;
+      
       // console.log('dataImg', dataImg);
       // console.log('dataImg.hits', dataImg.hits);
       renderImg(dataImg);
 
           if (totalSearch === 0 || newArr === [] || dataImg.hits === []) {
             Notiflix.Notify.info (`Sorry, there are no images matching your search query. Please try again.`);
+            refs.btnLoad.classList.add('is-hidden');
           } else
            if (totalSearch > 0 && totalSearch < 41) {
             Notiflix.Notify.info (`Hooray! We found ${totalSearch} images.`);
@@ -70,6 +75,7 @@ async function onSubmit(evt) {
       catch (onFetchError) {
         console.log(error.message);
       };
+      page += 1;
     clearEl();
 }
 

@@ -12,7 +12,6 @@ export class PixabayAPI {
     }
 
     fetchImg(){
-        this.page += 1;
             return axios.get(`${this.#BASE_URL}/?`, {    
             params: {
                     image_type: 'photo',
@@ -25,11 +24,6 @@ export class PixabayAPI {
                 }
             })
          }   
-
-    // set query(newQuery) {
-    //     this.#query = newQuery;
-    // }
-
 }
 
 
