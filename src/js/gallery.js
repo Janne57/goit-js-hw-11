@@ -10,7 +10,7 @@ import Notiflix from 'notiflix';
 
 
 let page = 1;
-// let searchEl = '';
+let searchEl = '';
 let totalSearch = 0;
 let newArr = [];
 let dataImg;
