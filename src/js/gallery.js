@@ -1,22 +1,16 @@
 import refs from './refs';
 import {PixabayAPI} from './pixabayAPI.js';
-// import {renderImg} from './pixabayAPI';
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import Notiflix from 'notiflix';
-// import axios from "axios";
-
-
 
 
 let page = 1;
 let searchEl = '';
 let totalSearch = 0;
 let newArr = [];
-let dataImg;
 
 const newPixabayAPI = new PixabayAPI();
-
 
 refs.formSearch.addEventListener('submit', onSubmit);
 refs.btnLoad.addEventListener('click', onLoad);
@@ -25,9 +19,11 @@ refs.btnLoad.addEventListener('click', onLoad);
 async function onLoad(evt){
     evt.preventDefault();
     page += 1;
+    
     try {
-      const dataRenderImg = await newPixabayAPI.fetchImg(page);
-      renderImg(dataRenderImg);
+    const dataRenderI = await newPixabayAPI.fetchImg(page);
+    const dataRenderImg = dataRenderI.data;
+    renderImg(dataRenderImg);
     }
     catch (error) {console.log(error.message);
     };
@@ -44,26 +40,21 @@ async function onLoad(evt){
 
 async function onSubmit(evt) {
     evt.preventDefault();
-    // let dataImg;
     page = 1;
     searchEl = refs.inputSearch.value.trim();
     console.log('searchEl', searchEl);
-    
     newPixabayAPI.query = searchEl;
-    // const rew = newPixabayAPI.query;
-    // console.log(' newPixabayAPI.query', rew);
 
     if (!searchEl || searchEl === ' ') {
       return Notiflix.Notify.failure (`Please, enter your search query.`);
     } 
 
     try {
-    const dataI = await newPixabayAPI.fetchImg(page);
-     dataImg = dataI.data;
-    // console.log('dataImg', dataImg);
-    // console.log('dataImg.hits', dataImg.hits);
-    renderImg(dataImg);
-    
+      const dataI = await newPixabayAPI.fetchImg(page);
+      const dataImg = dataI.data;
+      // console.log('dataImg', dataImg);
+      // console.log('dataImg.hits', dataImg.hits);
+      renderImg(dataImg);
 
           if (totalSearch === 0 || newArr === [] || dataImg.hits === []) {
             Notiflix.Notify.info (`Sorry, there are no images matching your search query. Please try again.`);
@@ -76,24 +67,22 @@ async function onSubmit(evt) {
             refs.btnLoad.classList.remove('is-hidden');
           }     
     }
-      catch (error) {
+      // .catch(onFetchError);
+      catch (onFetchError) {
         console.log(error.message);
-      }
-
+      };
     clearEl();
 }
 
 
-
-
 async function renderImg(data) {
    newArr = data.hits;
-   console.log('newArr', newArr);
    totalSearch = data.totalHits;
-try {
+
+  try {
   const newHits = await newArr
        .map((hit) => {
-            return `
+                  return `
           <div class="photo-card">
             <a class="photo-card_link" href="${hit.largeImageURL}">
                 <img src="${hit.webformatURL}" class="img-set" alt="${hit.tags}" loading="lazy" width='180px' height='160px'/>
@@ -119,10 +108,10 @@ try {
       refs.galleryImg.insertAdjacentHTML('beforeend', newHits);
       var lightbox = new SimpleLightbox('.gallery a');
       lightbox.refresh(); 
-}
-catch (error) {
-console.log(error);
-}  
+  }
+  catch (error){
+    console.log(error);
+   }
 };
 
 
