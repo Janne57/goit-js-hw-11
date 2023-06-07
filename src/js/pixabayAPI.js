@@ -4,28 +4,31 @@ import axios from "axios";
 export class PixabayAPI {
     #BASE_URL = 'https://pixabay.com/api/';
     #API_KEY = '36926934-069e003b546c638e37e68c3ce';
-    #query = '';
 
-    fetchImg(page){
-            const data = axios.get(`${this.#BASE_URL}`,{    
+    constructor() {
+        this.page = 0;
+        this.query = null;
+        this.perPage = 40;
+    }
+
+    fetchImg(){
+        this.page += 1;
+            return axios.get(`${this.#BASE_URL}/?`, {    
             params: {
-                    key: this.#API_KEY,
-                    query: this.#query,
-                    page,
-                    per_page: 40,
                     image_type: 'photo',
                     orientation: 'horizontal',
-                    safesearch: true
+                    q: this.query,
+                    page: this.page,
+                    per_page: this.perPage,
+                    key: this.#API_KEY,
+                    safesearch: true,                 
                 }
-             });
-             console.log('data', data);
-             
-             return data;
-             }   
+            })
+         }   
 
-    set query(newQuery) {
-        this.#query = newQuery;
-    }
+    // set query(newQuery) {
+    //     this.#query = newQuery;
+    // }
 
 }
 
