@@ -1,6 +1,6 @@
 import refs from './refs';
 import {PixabayAPI} from './pixabayAPI.js';
-import {renderImg} from './pixabayAPI';
+// import {renderImg} from './pixabayAPI';
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import Notiflix from 'notiflix';
@@ -78,19 +78,20 @@ async function onSubmit(evt) {
     }
       catch (error) {
         console.log(error.message);
-      };
+      }
+
     clearEl();
 }
 
 
 
 
-function renderImg(data) {
+async function renderImg(data) {
    newArr = data.hits;
    console.log('newArr', newArr);
    totalSearch = data.totalHits;
-
-  const newHits = newArr
+try {
+  const newHits = await newArr
        .map((hit) => {
             return `
           <div class="photo-card">
@@ -118,6 +119,10 @@ function renderImg(data) {
       refs.galleryImg.insertAdjacentHTML('beforeend', newHits);
       var lightbox = new SimpleLightbox('.gallery a');
       lightbox.refresh(); 
+}
+catch (error) {
+console.log(error);
+}  
 };
 
 
