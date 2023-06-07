@@ -21,8 +21,6 @@ export class PixabayAPI {
              console.log('data', data);
              
              return data;
-             } catch (error) {
-               console.log(error.message);
              }   
 
     set query(newQuery) {
